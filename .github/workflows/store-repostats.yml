@@ -1,0 +1,24 @@
+name: store-repostats
+concurrency: store-repostats
+
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+jobs:
+  store-repostats:
+    name: store-repostats
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The repositories to generate reports for
+        statsRepo: ['maplibre/maplibre-native', 'maplibre/maplibre-gl-native-distribution']
+      fail-fast: false
+      max-parallel: 1
+    steps:
+      - name: run-ghrs
+        uses: jgehrcke/github-repo-stats@RELEASE
+        with:
+          repository: ${{ matrix.statsRepo }}
+          ghtoken: ${{ secrets.ghrs_github_api_token }}
